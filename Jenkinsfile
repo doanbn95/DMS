@@ -23,7 +23,7 @@ pipeline {
         stage ('Deployment Stage') {
             steps {
                 withMaven(maven : 'maven 3.6') {
-                     bat 'mvn deploy'
+                     bat 'mvn clean install'
                 }
             }
         }
