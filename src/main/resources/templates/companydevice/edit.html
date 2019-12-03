@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <title>Chỉnh sửa thiết bị </title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<div layout:fragment="content" th:remove="tag">
+    <div class="col-md-7 col-md-offset-3" id="form_content">
+        <form id="create_form" action="#" th:action="@{/companydevice/create}" th:object="${company}"
+              method="POST">
+            <input type="hidden" th:field="*{id}">
+            <input type="hidden" th:field="*{codeDeviceOld}" id="codeDeviceOld">
+            <input type="hidden" id="detailTypeValue" th:field="*{detailType}">
+            <input type="hidden" id="staffId" th:field="*{staffId}">
+
+            <div class="form-group create_form">
+                <div class="col-md-3 label_for_form">
+                    <label class="title_form" for="codeDevice">Mã tài sản</label>
+                    <label class="compulsory">*</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="text"
+                           id="codeDevice"
+                           name="codeDevice"
+                           th:field="*{codeDevice}"
+                           class="create_and_edit_form"
+                           autofocus="autofocus"
+                           placeholder="Mã tài sản">
+                    <label id="codeDevice_errors" th:class="error"></label>
+                </div>
+            </div>
+            <div class="form-group create_form">
+                <div class="col-md-3 label_for_form">
+                    <label class="title_form" for="status">Tình trạng</label>
+                    <label class="compulsory">*</label>
+                </div>
+                <div class="col-md-7">
+                    <select class="create_and_edit_form" id="status" name="status">
+                        <option th:value="''">Tình trạng</option>
+                        <option th:each="value : ${statusDevices}"
+                                th:selected="${company.status}==${value.getText()}" th:value="${value.getCode()}"
+                                th:text="${value.getText()}"></option>
+                    </select>
+                    <label id="status_errors" th:class="error"></label>
+                </div>
+            </div>
+            <div class="form-group create_form">
+                <div class="col-md-3 label_for_form">
+                    <label class="title_form" for="provideUnit">Nhà cung cấp</label>
+                    <label class="compulsory">*</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="text"
+                           id="provideUnit"
+                           name="provideUnit"
+                           th:field="*{provideUnit}"
+                           class="create_and_edit_form"
+                           autofocus="autofocus"
+                           placeholder="Nhà cung cấp">
+                    <label id="provideUnit_errors" th:class="error"></label>
+                </div>
+            </div>
+            <div class="form-group create_form">
+                <div class="col-md-3 label_for_form">
+                    <label class="title_form" for="typeDevice">Loại thiết bị</label>
+                    <label class="compulsory">*</label>
+                </div>
+                <div class="col-md-7">
+                    <select class="create_and_edit_form" id="typeDevice" name="typeDevice">
+                        <option th:value="''">Loại thiết bị</option>
+                        <option th:each="value : ${typeDevices}" th:value="${value.getCode()}"
+                                th:selected="${company.typeDevice==value.getText()}"
+                                th:text="${value.getText()}"></option>
+                    </select>
+                    <label id="typeDevice_errors" th:class="error"></label>
+                </div>
+            </div>
+            <div class="form-group create_form">
+                <div class="col-md-3 label_for_form" id="detailTypeLabel">
+                    <label class="title_form" for="detailType">Thiết bị</label>
+                    <label class="compulsory">*</label>
+                </div>
+                <div class="col-md-7" id="detailTypeContent">
+                    <select class='create_and_edit_form' id='detailType'
+                            onchange="changeElement('detailType','Thiết bị')"
+                            style='margin-bottom: 15px;'>
+                        <option value="">Thiết bị</option>
+                        <option th:each="value : ${detailTypeValues}" th:value="${value.value}"
+                                th:selected="${company.detailType==value.value}"
+                                th:text="${value.value}">
+                        </option>
+                        <option th:unless="${flag}" selected="true" th:value="Khác" th:text="Khác"></option>
+                        <option th:if="${flag}" th:value="Khác" th:text="Khác"></option>
+                    </select>
+                    <div id="detailTypeNone">
+                        <input type="text" th:unless="${flag}" id="detailTypeSelect" onchange="setElement('detailType')"
+                               th:field="*{detailType}" class="create_and_edit_form" style="margin-top: 15px;"
+                               autofocus="autofocus" placeholder="Thiet bi"/>
+                    </div>
+                    <label id="detailType_errors" th:class="error"></label>
+                </div>
+            </div>
+            <div class="form-group create_form">
+                <div class="col-md-3 label_for_form">
+                    <label class="title_form" for="staffEmail">Email nhân viên</label>
+                    <label class="compulsory">*</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="email"
+                           id="staffEmail"
+                           name="staffEmail"
+                           th:field="*{staffEmail}"
+                           class="create_and_edit_form"
+                           autofocus="autofocus"
+                           placeholder="Email nhân viên">
+                    <label id="staffEmail_errors" th:class="error"></label>
+                </div>
+                <div class="form-group create_form">
+                    <div class="col-md-3 label_for_form">
+                        <label class="title_form" for="staffName">Tên nhân viên</label>
+                        <label class="compulsory">*</label>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="text"
+                               id="staffName"
+                               name="staffName"
+                               th:field="*{staffName}"
+                               class="create_and_edit_form"
+                               autofocus="autofocus"
+                               placeholder="Tên nhân viên">
+                        <label id="staffName_errors" th:class="error"></label>
+                    </div>
+                </div>
+                <div class="form-group create_form">
+                    <div class="col-md-3 label_for_form">
+                        <label class="title_form" for="staffDepartment">Bộ phận</label>
+                        <label class="compulsory">*</label>
+                    </div>
+                    <div class="col-md-7">
+                        <select id="staffDepartment" th:field="*{staffDepartment}" class="create_and_edit_form"
+                                onchange="changeElement('staffDepartment','Bộ phận')">
+                            <option th:value="''" th:text="'Bộ phận'"></option>
+                            <option th:each="department:${departments}" th:value="${department.value}"
+                                    th:text="${department.value}"></option>
+                            <option th:text="'Khác'" th:value="'Khác'"></option>
+                        </select>
+                        <div id="staffDepartmentNone"></div>
+                        <label id="staffDepartment_errors" th:class="error"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group create_form">
+                <div class="col-md-3 label_for_form">
+                    <label class="title_form" for="description">Mô tả thiết bị</label>
+                    <label class="compulsory">*</label>
+                </div>
+                <div class="col-md-7">
+                    <textarea class="create_and_edit_form" id="description" name="detail"
+                              th:field="*{description}"
+                              cols="20" rows="5" placeholder="Mô tả thiết bị" style="min-height: 50px;">
+                    </textarea>
+                    <label id="description_errors" th:class="error"></label>
+                </div>
+            </div>
+            <div class="form-group create_form">
+                <div class="col-md-3 label_for_form">
+                    <label class="title_form" for="boughtDate">Ngày mua:</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="date"
+                           id="boughtDate"
+                           name="boughtDate"
+                           th:field="*{boughtDate}"
+                           class="create_and_edit_form"
+                           autofocus="autofocus"
+                           placeholder="Ngày mua">
+                    <label id="boughtDate_errors" th:class="error"></label>
+                </div>
+            </div>
+            <div class="form-group create_form">
+                <div class="col-md-3 label_for_form">
+                    <label class="title_form" for="boughtDate">Số tiền mua:</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="text"
+                           id="boughtCost"
+                           name="boughtCost"
+                           th:field="*{boughtCost}"
+                           class="create_and_edit_form"
+                           autofocus="autofocus"
+                           placeholder="Số tiền mua">
+                    <label id="boughtCost_errors" th:class="error"></label>
+                </div>
+            </div>
+            <div class="form-group create_form">
+                <div class="col-md-3 label_for_form">
+                    <label class="title_form" for="warrantyTime">Ngày bảo hành</label>
+                </div>
+                <div class="col-md-7">
+                    <input type="date"
+                           id="warrantyTime"
+                           name="warrantyTime"
+                           th:field="*{warrantyTime}"
+                           class="create_and_edit_form"
+                           autofocus="autofocus"
+                           placeholder="Ngày bảo hành">
+                    <label id="warrantyTime_errors" th:class="error"></label>
+                </div>
+            </div>
+            <div class="form-group create_form">
+                <div class="col-md-3 label_for_form">
+                    <label class="title_form" for="addressWarranty">Lịch sử bảo hành</label>
+
+                </div>
+                <div class="col-md-7">
+                            <textarea id="addressWarranty" name="addressWarranty" class="create_and_edit_form"
+                                      autofocus="autofocus"
+                                      cols="20" rows="5" placeholder="Lịch sử bảo hành"
+                                      style="margin-bottom: 15px;min-height: 50px;"
+                                      th:field="*{addressWarranty}">
+
+                            </textarea>
+                    <label id="addressWarranty_errors" class="error"></label>
+                </div>
+            </div>
+
+            <div class="form-group create_form" id="view">
+                <th:block th:switch="*{status}">
+                    <th:block th:case="'Đang sử dụng'">
+                        <div class="col-md-3 label_for_form">
+                            <label class="title_form" for="handTime">Ngày bàn giao</label>
+                            <label class="compulsory">*</label>
+                        </div>
+                        <div class="col-md-7">
+                            <input type="date" id="handTime" name="handTime" class="create_and_edit_form"
+                                   onchange="getValueById('handTime')" autofocus="autofocus" placeholder="Ngày bàn giao"
+                                   style="margin-bottom: 15px;"
+                                   th:field="*{handTime}">
+                            <label id="handTime_errors" class="error"></label>
+                        </div>
+                        <th:block
+                                th:if="${company.typeDevice}=='Thiết bị test'">
+                            <div class="col-md-3 label_for_form">
+                                <label id="returnDateLabel" class="title_form" for="returnDate">Ngày trả</label>
+                                <label class="compulsory">*</label>
+                            </div>
+                            <div class="col-md-7">
+                                <input type="date" id="returnDate" name="returnDate" class="create_and_edit_form"
+                                       onchange="getValueById('returnDate')" autofocus="autofocus" placeholder="Hạn trả"
+                                       style="margin-bottom: 15px;"
+                                       th:field="*{returnDate}">
+                                <label id="returnDate_errors" class="error"></label>
+                            </div>
+                        </th:block>
+                    </th:block>
+                    <th:block th:case="'Thanh lý'">
+                        <div class="col-md-3 label_for_form">
+                            <label class="title_form" for="buyDate">Ngày thanh lý</label>
+                            <label class="compulsory">*</label>
+                        </div>
+                        <div class="col-md-7">
+                            <input type="date" id="buyDate" name="buyDate" onchange="getValueById('buyDate')"
+                                   class="create_and_edit_form" autofocus="autofocus" placeholder="Ngày thanh lý"
+                                   style="margin-bottom: 15px;"
+                                   th:field="*{buyDate}">
+                            <label id="buyDate_errors" class="error"></label>
+                        </div>
+                        <div class="col-md-3 label_for_form">
+                            <label class="title_form" for="buyCost">Giá thanh lý</label>
+                            <label class="compulsory">*</label>
+                        </div>
+                        <div class="col-md-7">
+                            <input type="text" id="buyCost" name="buyCost" class="create_and_edit_form"
+                                   onkeydown="getValueById('buyCost')" autofocus="autofocus" placeholder="Giá thanh lý"
+                                   style="margin-bottom: 15px;" th:field="*{buyCost}">
+                            <label id="buyCost_errors" class="error"></label>
+                        </div>
+                    </th:block>
+                    <th:block th:case="'Đang bảo hành'">
+                    </th:block>
+                </th:block>
+            </div>
+            <div>
+                <input type="hidden" id="buyCostValue" th:field="*{buyCost}">
+                <input type="hidden" id="buyDateValue" th:field="*{buyDate}">
+                <input type="hidden" id="addressWarrantyValue" th:field="*{addressWarranty}">
+                <input type="hidden" id="returnDateValue" th:field="*{returnDate}">
+                <!--                <input type="hidden" id="reasonWarrantyValue" th:field="*{reasonWarranty}">-->
+                <input type="hidden" id="handTimeValue" th:field="*{handTime}">
+                <!--                <input type="hidden" id="warrantyTimeValue" th:field="*{warrantyTime}">-->
+                <input type="hidden" id="staffDepartmentValue" th:field="*{staffDepartment}">
+                <input type="hidden" id="createPerson" th:field="*{createPerson}">
+                <input type="hidden" id="editPerson" th:field="*{editPerson}">
+            </div>
+            <div class="form-group create_form">
+                <div class="row" style="padding: 10px;">
+                    <div style="margin-bottom: 20px;">
+                        <input type="button"
+                               name="submit"
+                               id="update"
+                               class="btn btn-primary col-sm-2 col-sm-offset-3"
+                               value="Cập nhật">
+                        <a th:href="@{/companydevice/list}" class="btn btn-danger col-sm-2 col-sm-offset-2">Hủy</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="modal fade" role="dialog" id="successModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    </div>
+                    <div class="modal-body">
+                        <div class="icon">
+                            <span class="glyphicon glyphicon-thumbs-up"></span>
+                        </div>
+                        <div class="content-modal">
+                            <h2>THÀNH CÔNG!</h2>
+                            <p>Cập nhật thiết bị thành công</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div layout:fragment="companydevice" th:remove="tag">
+    <script type="text/javascript" th:src="@{/js/company.js}"></script>
+</div>
+</body>
+</html>

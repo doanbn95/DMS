@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragments/layout_login}">
+<head>
+    <title>Login</title>
+</head>
+<body id="login_site" style="background-image: url(/img/dangnhap-min-min.png)">
+<div layout:fragment="content" th:remove="tag">
+    <div class="card">
+        <div class="center">
+            <label class="card_header">Đăng Nhập</label>
+        </div>
+        <div class="card_body center">
+            <form action="#" th:action="@{/login}" method="POST">
+                <div th:if="${param.error}">
+                    <div class="alert alert-danger center">
+                        Đăng nhập không thành công do email hoặc mật khẩu không hợp lệ
+                    </div>
+                </div>
+                <div class="form-group center-block" style="width:70%">
+                    <label for="username"></label>
+                    <input type="text"
+                           id="username"
+                           name="username"
+                           class="form-control"
+                           autofocus="autofocus"
+                           placeholder="Email Người Dùng">
+                </div>
+                <div class="form-group center-block" style="width:70%">
+                    <label for="password"></label>
+                    <input type="password"
+                           id="password"
+                           name="password"
+                           class="form-control"
+                           placeholder="Mật Khẩu">
+                </div>
+                <div class="form-group center-block" style="width:50%">
+                    <label for="login-submit-body"></label>
+                    <input type="submit"
+                           name="login-submit"
+                           id="login-submit-body"
+                           class="form-control btn btn-info"
+                           value="Đăng Nhập">
+                    <div class="card_footer center">
+                        <a href="/forgotPassword">Quên Mật Khẩu?</a>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
