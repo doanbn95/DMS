@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý thiết bị công ty</title>
+</head>
+<body>
+<div class="container" layout:fragment="content" th:remove="tag">
+    <div class="row">
+        <div id="example_filter" class="dataTables_filter">
+            <label>
+                <div class="form-group has-feedback">
+                    <input id="text_search" class="form-control form-control-sm" placeholder="Tìm kiếm"
+                           aria-controls="example" autofocus="autofocus">
+                    <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                </div>
+            </label>
+            <a id="create_new" th:href="@{/companydevice/create}" class="btn btn-primary col-sm-1">TẠO MỚI</a>
+            <label class="btn checkbox btn-success">Mới <input type="checkbox" name="status" value="Mới"
+                                                               class="badgebox"><span
+                    class="badge">&check;</span></label>
+            <label class="btn checkbox btn-success">Đang sử dụng<input type="checkbox" name="status"
+                                                                       value="Đang sử dụng"
+                                                                       class="badgebox"><span
+                    class="badge">&check;</span></label>
+            <label class="btn checkbox btn-success">Lưu kho <input type="checkbox" name="status" value="Lưu kho"
+                                                                   class="badgebox"><span
+                    class="badge">&check;</span></label>
+            <label class="btn checkbox btn-success">Đang bảo hành<input type="checkbox" name="status"
+                                                                        value="Đang bảo hành"
+                                                                        class="badgebox"><span
+                    class="badge">&check;</span></label>
+            <label class="btn checkbox btn-success">Thanh lý<input type="checkbox" name="status" value="Thanh lý"
+                                                                   class="badgebox"><span
+                    class="badge">&check;</span></label>
+            <label id="export-btn"></label>
+        </div>
+        <table id="table" class="table table-striped table-bordered center" style="width:100%">
+            <thead class="titletable">
+            <tr>
+                <th style="display: none;">ID</th>
+                <th style="width:8%;">Mã tài sản</th>
+                <th style="width:10%;">Tình trạng</th>
+                <th style="width:10%;">Nhà cung cấp</th>
+                <th style="width:10%;">Thiết bị</th>
+                <th style="width:13%;">Loại thiết bị</th>
+                <th style="width:16%;">Mô tả thiết bị</th>
+                <th style="display: none;">Ngày mua</th>
+                <th style="display: none;">Số tiền mua</th>
+                <th style="display: none;">Tên nhân viên</th>
+                <th style="display: none;">Bộ phận</th>
+                <th style="width:13%;">Email</th>
+                <th style="display: none;">Ngày bàn giao</th>
+                <th style="display: none;">Ngày thanh lý</th>
+                <th style="display: none;">Giá thanh lý</th>
+                <th style="display: none;">Hạn trả</th>
+                <th style="width:12%;">Hoạt động</th>
+            </tr>
+            </thead>
+            <tbody id="table_view">
+
+            </tbody>
+        </table>
+    </div>
+    <div class="modal fade" role="dialog" id="ModalDelete">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Xác nhận</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có muốn xóa thông tin thiết bị này phải không?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="DeleteButton">Xóa</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="detailModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Chi tiết thiết bị</h4>
+                </div>
+                <div class="modal-body responsive-area modal-detail table table-striped" id="detailCompany">
+                    <table class="table table-striped table-bordered center">
+                        <tr>
+                            <td class="modal_body_title">Mã tài sản:</td>
+                            <td class="modal_body_content"><p id="codeDeviceModal"></p></td>
+                        </tr>
+                        <tr>
+                            <td class="modal_body_title">Loại thiết bị:</td>
+                            <td class="modal_body_content"><p id="typeModal"></p></td>
+                        </tr>
+                        <tr>
+                            <td class="modal_body_title">Thiết bị:</td>
+                            <td class="modal_body_content"><p id="detailTypeModal"></p></td>
+                        </tr>
+                        <tr>
+                            <td class="modal_body_title">Mô tả thiết bị:</td>
+                            <td class="modal_body_content"><p id="detailDeviceModal"></p></td>
+                        </tr>
+                        <tr>
+                            <td class="modal_body_title">Ngày mua:</td>
+                            <td class="modal_body_content"><p id="boughtDateModal"></p></td>
+                        </tr>
+                        <tr>
+                            <td class="modal_body_title">Số tiền mua:</td>
+                            <td class="modal_body_content"><p id="boughtCostModal"></p></td>
+                        </tr>
+                        <tr>
+                            <td class="modal_body_title">Email nhân viên:</td>
+                            <td class="modal_body_content"><p id="emailDeviceModal"></p></td>
+                        </tr>
+                        <tr>
+                            <td class="modal_body_title">Bộ phận:</td>
+                            <td class="modal_body_content"><p id="departmentModal"></p></td>
+                        </tr>
+                        <tr>
+                            <td class="modal_body_title">Tên nhân viên:</td>
+                            <td class="modal_body_content"><p id="nameStaffModal"></p></td>
+                        </tr>
+
+                        <tr>
+                            <td class="modal_body_title">Người tạo:</td>
+                            <td class="modal_body_content"><p id="createPersonModal"></p></td>
+                        </tr>
+                        <tr>
+                            <td class="modal_body_title">Người chỉnh sửa:</td>
+                            <td class="modal_body_content"><p id="editPersonModal"></p></td>
+                        </tr>
+                        <tr>
+                            <td class="modal_body_title">Tình trạng:</td>
+                            <td class="modal_body_content"><p id="StatusModal"></p></td>
+                        </tr>
+                        <tr>
+                            <td class="modal_body_title">Lịch sử bảo hành:</td>
+                            <td class="modal_body_content"><p id="addressWarrantyModal"></p></td>
+                        </tr>
+                        <tr>
+                            <td class="modal_body_title">Ngày bảo hành:</td>
+                            <td class="modal_body_content"><p id="warrantyTimeModal"></p></td>
+                        </tr>
+
+                        <tfoot id="view">
+
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div layout:fragment="companydevice" th:remove="tag">
+    <script type="text/javascript" th:src="@{/js/company.js}"></script>
+    <script type="text/javascript" th:src="@{/js/list.js}"></script>
+</div>
+</body>
+</html>

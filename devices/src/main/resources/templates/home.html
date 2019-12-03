@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang chủ</title>
+</head>
+<body>
+<br>
+<div class="container" layout:fragment="content" th:remove="tag">
+    <div class="noti-card birthday-card col-md-6">
+        <div class="card-content">
+
+            <div class="noti-header">
+                <h2>Danh sách hạn trả thiết bị <strong class="redString">(<span
+                        th:text="${number}"></span>)</strong></h2>
+            </div>
+            <div class="news-content scroll4">
+                <div class="box_table" th:each="item : ${listDevice}" th:id="${item.id}">
+                    <div class="alert alert-success">
+                        <div>
+                            <th:block
+                                    th:if="${#dates.format(item.returnDate,'dd/MM/yyyy')} == ${#dates.format(#dates.createNow(),'dd/MM/yyyy')}">
+                                <p class="glyphicon glyphicon-star"></p>
+                            </th:block>
+                        </div>
+                        <span>
+                            <p th:text="'Hạn trả : ' + ${#dates.format(item.returnDate,'dd/MM/yyyy')}"></p>
+                            <p>Người dùng : <strong class="redString" th:text="${item.staffEmail}"></strong></p>
+                            <p th:text="'Mã thiết bị : ' + ${item.codeDevice}"></p>
+                         </span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="noti-card col-md-6 count-card">
+        <div class="noti-header">
+            <h2>Thiết bị có thể cho mượn</h2>
+        </div>
+        <div class="news-content scroll4">
+            <th:block th:unless="${#arrays.isEmpty(totalDevice)}">
+                <div id="card-noti" class="noti-card col-md-6" th:each="total : ${totalDevice}"
+                     th:onclick="'myFunction(\'' + ${total.type} + '\');'">
+                    <div class="noti-header-child header-card">
+                        <h3 id="header-name" th:text="${total.type}"></h3>
+                    </div>
+                    <div class="count-device">
+                        <strong class="countNum"><h1 th:text="${total.countType}"></h1></strong>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Danh sách thiết bị có thể cho mượn</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table id="example" class="center table table-striped table-bordered">
+                            <thead>
+                            <tr>
+                                <th style="width:10% !important;">Mã tài sản</th>
+                                <th style="width:25% !important; word-break: break-word;">Thiết bị</th>
+                                <th style="width:50% !important; word-break: break-word;">Mô tả thiết bị</th>
+                                <th style="width:15% !important;">Loại thiết bị</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div layout:fragment="home" th:remove="tag">
+    <script type="text/javascript" th:src="@{/js/home.js}"></script>
+</div>
+</body>
+</html>

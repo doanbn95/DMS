@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách người dùng</title>
+</head>
+<body>
+<br>
+<div class="container" layout:fragment="content" th:remove="tag">
+    <div class="row">
+        <div id="example_filter" class="dataTables_filter">
+            <label>
+                <div class="form-group has-feedback">
+                    <input id="text_search" class="form-control form-control-sm" placeholder="Tìm kiếm"
+                           aria-controls="example" autofocus="autofocus">
+                    <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                </div>
+            </label>
+            <a id="create_new" th:href="@{/user/create }" class="btn btn-primary col-sm-1">TẠO MỚI</a>
+        </div>
+        <table id="table" class="table table-striped table-bordered center" style="width:100%">
+            <thead>
+            <tr>
+                <th style="display: none">ID</th>
+                <th style="width: 20%">Email đăng nhập</th>
+                <th style="width: 16%">Họ tên</th>
+                <th style="width: 12%">Phân quyền</th>
+                <th style="width: 12%">Bộ phận</th>
+                <th style="width: 16%">Người tạo</th>
+                <th style="width: 12%">Ngày tạo</th>
+                <th style="width: 12%">Hoạt động</th>
+            </tr>
+            </thead>
+            <tbody id="table_view">
+            <tr th:each="user : ${allUsers}" th:id="${user.id}">
+                <td style="display: none" th:text="${user.id}"></td>
+                <td th:text="${user.userName}"></td>
+                <td th:text="${user.name}"></td>
+                <td th:text="${user.role}"></td>
+                <td th:text="${user.department}"></td>
+                <td th:text="${user.createPerson}"></td>
+                <td th:text="${#dates.format(user.createDay,'dd/MM/yyyy')}" class="center"></td>
+                <td class="center">
+                    <a th:href="@{/user/edit/{id}(id=${user.id})}" class="glyphicon glyphicon-edit"></a>
+                    <a th:if="${user.id} != ${loginId}" href="javascript:void(0)" class="glyphicon glyphicon-trash" th:onclick="'showModal(\''+${user.id}+'\');'"></a>
+                </td>
+                <div class="modal fade" role="dialog" tabindex="-1" id="ModalDelete">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">Xác nhận</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>Bạn có muốn xóa tài khoản này không?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="DeleteButton">Xóa</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Hủy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+<div layout:fragment="user" th:remove="tag">
+    <script type="text/javascript" th:src="@{/js/user.js}"></script>
+</div>
+</body>
+</html>
