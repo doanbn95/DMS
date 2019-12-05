@@ -1,3 +1,3 @@
 FROM openjdk:8
-ADD target/docker-spring-boot.jar docker-spring-boot.war
+ADD target/DMS.jar DMS.war
 EXPOSE 8081
