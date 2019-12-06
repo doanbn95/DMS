@@ -1,3 +1,3 @@
 FROM openjdk:8
-ADD target/DMS.jar DMS.war
+ADD target/DMS.war DMS.war
 EXPOSE 8081
